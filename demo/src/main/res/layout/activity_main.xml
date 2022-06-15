@@ -33,6 +33,22 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+        <FrameLayout
+            android:id="@+id/connecting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/scrimBackground"
+            android:visibility="gone">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/connecting_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:max="100" />
+
+        </FrameLayout>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/connect"
             android:layout_width="wrap_content"
@@ -41,6 +57,16 @@
             android:layout_margin="@dimen/fab_margin"
             android:contentDescription="@string/connect"
             app:srcCompat="@android:drawable/ic_menu_call" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@string/disconnect"
+            android:visibility="gone"
+            app:srcCompat="@android:drawable/ic_lock_power_off" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

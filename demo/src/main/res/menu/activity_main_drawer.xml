@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_lobby"
-            android:title="@string/menu_lobby" />
-        <item
-            android:id="@+id/nav_conference"
-            android:title="@string/menu_conference" />
-    </group>
+    <item android:title="Preferences" />
+
+    <item android:title="Log" />
+
+    <item android:title="Top" />
+
 </menu>

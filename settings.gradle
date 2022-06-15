@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url "https://icl.jfrog.io/artifactory/kakaoenterprise" }
     }
 }
-rootProject.name = "My Application"
+rootProject.name = "iCl2 Demo"
 include ':demo'

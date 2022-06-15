@@ -1,12 +1,9 @@
 <resources>
-    <string name="app_name">My Application</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">iCl2 Demo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_subtitle">iCl2 Demo</string>
     <string name="action_settings">Settings</string>
     <string name="connect">Connect</string>
-
-    <string name="menu_lobby">Lobby</string>
-    <string name="menu_conference">Conference</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="sdk_version_is">SDK version:\n %s</string>
 </resources>
