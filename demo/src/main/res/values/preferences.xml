@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources translatable="false">
-    <string name="key_preferences">key_preferences</string>
+    <string name="key_service_id">key_service_id</string>
+    <string name="key_service_key">key_service_key</string>
+    <string name="key_secret">key_secret</string>
+    <string name="key_token">key_token</string>
+    <string name="key_provisioning_url">key_provisioning_url</string>
+    <string name="key_api_url">key_api_url</string>
+    <string name="key_turn_server">key_turn_server</string>
+    <string name="key_turn_username">key_turn_username</string>
+    <string name="key_turn_credential">key_turn_credential</string>
+    <string name="key_use_external">key_use_external</string>
+    <string name="key_camera_enabled">key_camera_enabled</string>
+    <string name="key_camera_front">key_camera_front</string>
+    <string name="key_mic_enabled">key_mic_enabled</string>
+    <string name="key_speaker_device">key_speaker_device</string>
+    <string name="key_room_id">key_room_id</string>
 </resources>

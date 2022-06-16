@@ -7,4 +7,23 @@
     <string name="disconnect">Disconnect</string>
     <string name="sdk_version_is">SDK version:\n %s</string>
     <string name="title_activity_preferences">Preferences</string>
+    <string name="service_id">Service ID</string>
+    <string name="use_external">Use external provisioning</string>
+    <string name="service_key">Service Key</string>
+    <string name="secret">Secret</string>
+    <string name="token">Token</string>
+    <string name="provisioning_server">Provisioning Server</string>
+    <string name="api_server">API Server</string>
+    <string name="turn_server">TURN Server</string>
+    <string name="turn_username">TURN Username</string>
+    <string name="turn_credential">TURN Credential</string>
+    <string name="camera">Camera</string>
+    <string name="prefer_front_camera">Camera facing</string>
+    <string name="microphone">Mic</string>
+    <string name="speaker">Speaker</string>
+    <string name="room">Room</string>
+    <string name="require_permission_arg">Require permission: %s</string>
+    <string name="app_settings">App settings</string>
+    <string name="front">Front</string>
+    <string name="rear">Rear</string>
 </resources>

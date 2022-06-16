@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:key="@string/key_preferences"
-        app:title="Preferences" />
+    <CheckBoxPreference
+        app:key="@string/key_camera_enabled"
+        app:title="@string/camera" />
+
+    <SwitchPreference
+        app:defaultValue="true"
+        app:dependency="@string/key_camera_enabled"
+        app:key="@string/key_camera_front"
+        app:summaryOff="@string/rear"
+        app:summaryOn="@string/front"
+        app:title="@string/prefer_front_camera" />
+
+    <CheckBoxPreference
+        app:key="@string/key_mic_enabled"
+        app:title="@string/microphone" />
+
+    <ListPreference
+        app:key="@string/key_speaker_device"
+        app:title="@string/speaker"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        app:defaultValue="test-room"
+        app:key="@string/key_room_id"
+        app:title="@string/room"
+        app:useSimpleSummaryProvider="true" />
 
 </PreferenceScreen>
