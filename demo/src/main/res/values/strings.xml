@@ -6,4 +6,5 @@
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="sdk_version_is">SDK version:\n %s</string>
+    <string name="title_activity_preferences">Preferences</string>
 </resources>

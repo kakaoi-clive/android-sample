@@ -3,10 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Preferences" />
+    <item
+        android:id="@+id/action_preferences"
+        android:title="Preferences" />
 
-    <item android:title="Log" />
+    <item
+        android:id="@+id/action_log"
+        android:title="Log" />
 
-    <item android:title="Top" />
+    <item
+        android:id="@+id/action_top"
+        android:title="Top" />
 
 </menu>

@@ -1,8 +1,10 @@
 package io.kakaoi.connectlive.demo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
@@ -27,6 +29,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        val toggle = ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+
+        binding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
         val navView: NavigationView = binding.navView
 
@@ -63,6 +75,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun onNavigationItemSelected(item: MenuItem): Boolean {
         binding.drawerLayout.close()
+        when (item.itemId) {
+            R.id.action_preferences -> startActivity(Intent(this, PreferencesActivity::class.java))
+        }
         return true
     }
 
@@ -107,5 +122,8 @@ class MainActivity : AppCompatActivity() {
         if (state is ConferenceService.State.CONNECTING) {
             binding.connectingProgress.progress = (state.progress * 100).toInt()
         }
+
+        binding.navView.menu.findItem(R.id.action_preferences).isEnabled =
+            state == ConferenceService.State.DISCONNECTED
     }
 }
