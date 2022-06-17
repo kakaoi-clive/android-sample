@@ -41,10 +41,9 @@ class LobbyFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLobbyBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    ): View = FragmentLobbyBinding.inflate(inflater, container, false).also {
+        _binding = it
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

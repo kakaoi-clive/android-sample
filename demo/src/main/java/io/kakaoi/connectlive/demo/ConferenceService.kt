@@ -11,7 +11,9 @@ import io.kakaoi.connectlive.*
 import io.kakaoi.connectlive.demo.util.Preferences
 import io.kakaoi.connectlive.media.LocalAudio
 import io.kakaoi.connectlive.media.LocalCamera
+import io.kakaoi.connectlive.media.LocalVideo
 import io.kakaoi.connectlive.media.RemoteVideo
+import io.kakaoi.connectlive.utils.AudioHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -52,6 +54,17 @@ class ConferenceService : LifecycleService() {
                 )
             }
         }
+
+        val preferredAudioDevice =
+            prefs.getString(getString(R.string.key_speaker_device), null).let { device ->
+                AudioHelper.Device.values().find { it.name == device }
+            }
+
+        if (preferredAudioDevice == null) AudioHelper.resetPreferences()
+        else AudioHelper.prefer(preferredAudioDevice)
+
+        AudioHelper.acquireFocus(this)
+
         room = ConnectLive.createRoom(events = OnEvents())
     }
 
@@ -94,6 +107,10 @@ class ConferenceService : LifecycleService() {
         super.onDestroy()
         room.disconnect()
         state.value = State.DISCONNECTED
+
+        localCamera.value?.dispose()
+        AudioHelper.releaseFocus()
+
         ConnectLive.signOut()
     }
 
@@ -113,6 +130,10 @@ class ConferenceService : LifecycleService() {
 
         override fun onError(code: Int, message: String, isFatal: Boolean) {
             Log.println(if (isFatal) Log.ERROR else Log.WARN, TAG, "onError: [$code] $message")
+        }
+
+        override fun onLocalVideoPublished(video: LocalVideo) {
+            video.start()
         }
 
         override fun onRemoteVideoPublished(participant: RemoteParticipant, video: RemoteVideo) {
