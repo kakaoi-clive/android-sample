@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 object Preferences {
-    private fun default(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
+    fun default(context: Context) = PreferenceManager.getDefaultSharedPreferences(context)
 
     private fun <V> SharedPreferences.changes(
         key: String,

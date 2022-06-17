@@ -11,10 +11,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import io.kakaoi.connectlive.demo.databinding.ActivityMainBinding
 import io.kakaoi.connectlive.demo.databinding.NavHeaderMainBinding
 import io.kakaoi.connectlive.demo.ui.conference.ConferenceFragment
 import io.kakaoi.connectlive.demo.ui.lobby.LobbyFragment
+import io.kakaoi.connectlive.demo.util.Preferences
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -54,7 +56,21 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener(::onNavigationItemSelected)
 
         binding.connect.setOnClickListener {
-            ConferenceService.start(this)
+            val roomId: String?
+            val cameraEnabled: Boolean
+            val micEnabled: Boolean
+            val preferFrontCamera: Boolean
+
+            Preferences.default(this).also {
+                roomId = it.getString(getString(R.string.key_room_id), null)?.trim()
+                cameraEnabled = it.getBoolean(getString(R.string.key_camera_enabled), false)
+                micEnabled = it.getBoolean(getString(R.string.key_mic_enabled), false)
+                preferFrontCamera = it.getBoolean(getString(R.string.key_camera_front), true)
+            }
+
+            if (roomId.isNullOrEmpty())
+                Snackbar.make(it, R.string.no_room_id, Snackbar.LENGTH_LONG).show()
+            else ConferenceService.start(this, roomId, cameraEnabled, micEnabled, preferFrontCamera)
         }
 
         binding.disconnect.setOnClickListener {
