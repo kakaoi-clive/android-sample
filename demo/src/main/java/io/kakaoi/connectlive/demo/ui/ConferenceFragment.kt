@@ -1,4 +1,4 @@
-package io.kakaoi.connectlive.demo.ui.conference
+package io.kakaoi.connectlive.demo.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

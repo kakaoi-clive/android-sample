@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ui.lobby.LobbyFragment">
+    tools:context=".ui.LobbyFragment">
 
     <io.kakaoi.connectlive.view.VideoRenderer
         android:id="@+id/camera"
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/panel"
-        android:name="io.kakaoi.connectlive.demo.ui.lobby.LobbyFragment$Panel"
+        android:name="io.kakaoi.connectlive.demo.ui.LobbyFragment$Panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

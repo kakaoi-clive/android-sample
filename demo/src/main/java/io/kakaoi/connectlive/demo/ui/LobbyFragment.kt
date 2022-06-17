@@ -1,4 +1,4 @@
-package io.kakaoi.connectlive.demo.ui.lobby
+package io.kakaoi.connectlive.demo.ui
 
 import android.Manifest
 import android.os.Bundle
