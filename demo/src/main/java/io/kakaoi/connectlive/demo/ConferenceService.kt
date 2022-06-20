@@ -150,6 +150,7 @@ class ConferenceService : LifecycleService() {
         val localCamera get() = impl.localCamera.asStateFlow()
         val localAudio get() = impl.localAudio.asStateFlow()
         val remoteVideos get() = impl.remoteVideos.asStateFlow()
+        val remoteParticipants get() = impl.room.remoteParticipants.values
     }
 
     sealed class State {

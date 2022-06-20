@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="@string/layout"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_layout_1x1"
+                    android:title="@string/layout_1x1" />
+                <item
+                    android:id="@+id/action_layout_2x1"
+                    android:title="@string/layout_2x1" />
+                <item
+                    android:id="@+id/action_layout_2x2"
+                    android:title="@string/layout_2x2" />
+                <item
+                    android:id="@+id/action_layout_3x2"
+                    android:title="@string/layout_3x2" />
+                <item
+                    android:id="@+id/action_layout_4x2"
+                    android:title="@string/layout_4x2" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_select_videos"
+        android:title="@string/videos"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -2,7 +2,6 @@ package io.kakaoi.connectlive.demo
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -97,11 +96,6 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> binding.drawerLayout.open()
@@ -113,7 +107,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() = when {
         binding.drawerLayout.isOpen -> binding.drawerLayout.close()
-        // TODO disconnect if connected
+        ConferenceService.state.value != ConferenceService.State.DISCONNECTED ->
+            ConferenceService.stop(this)
         else -> super.onBackPressed()
     }
 

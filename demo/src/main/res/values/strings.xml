@@ -27,4 +27,12 @@
     <string name="front">Front</string>
     <string name="rear">Rear</string>
     <string name="no_room_id">Room ID is not set</string>
+    <string name="layout">Layout</string>
+    <string name="videos">Videos</string>
+    <string name="layout_1x1">1x1</string>
+    <string name="layout_2x1">2x1</string>
+    <string name="layout_2x2">2x2</string>
+    <string name="layout_3x2">3x2</string>
+    <string name="layout_4x2">4x2</string>
+    <string name="title_pick_videos">Pick videos</string>
 </resources>
