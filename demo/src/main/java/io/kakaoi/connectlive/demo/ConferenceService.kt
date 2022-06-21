@@ -11,10 +11,7 @@ import androidx.lifecycle.LifecycleService
 import io.kakaoi.connectlive.*
 import io.kakaoi.connectlive.demo.util.Preferences
 import io.kakaoi.connectlive.demo.util.isGranted
-import io.kakaoi.connectlive.media.LocalAudio
-import io.kakaoi.connectlive.media.LocalCamera
-import io.kakaoi.connectlive.media.LocalVideo
-import io.kakaoi.connectlive.media.RemoteVideo
+import io.kakaoi.connectlive.media.*
 import io.kakaoi.connectlive.utils.AudioHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -27,7 +24,7 @@ class ConferenceService : LifecycleService() {
     private val state = MutableStateFlow<State>(State.DISCONNECTED)
     private lateinit var room: Room
     private val localCamera = MutableStateFlow<LocalCamera?>(null)
-    private val localScreen = MutableStateFlow<LocalVideo?>(null)
+    private val localScreen = MutableStateFlow<LocalScreen?>(null)
     private val localAudio = MutableStateFlow<LocalAudio?>(null)
     private val remoteVideos = MutableStateFlow<List<RemoteVideo>>(emptyList())
 
@@ -133,6 +130,22 @@ class ConferenceService : LifecycleService() {
         localCamera.value?.isEnabled = enabled
     }
 
+    private fun shareScreen(data: Intent) {
+        if (localScreen.value == null) {
+            val screen = ConnectLive.createLocalScreen(data) {
+                Log.d(TAG, "Screen share stopped")
+            }
+            room.publish(screen)
+
+            localScreen.value = screen
+        }
+    }
+
+    private fun stopShareScreen() {
+        localScreen.value?.let { room.unpublish(it) }
+        localScreen.value = null
+    }
+
     private fun setAudioEnabled(enabled: Boolean) {
         if (enabled) {
             check(isGranted(Manifest.permission.RECORD_AUDIO))
@@ -165,6 +178,10 @@ class ConferenceService : LifecycleService() {
             video.start()
         }
 
+        override fun onLocalVideoUnpublished(video: LocalVideo) {
+            video.dispose()
+        }
+
         override fun onRemoteVideoPublished(participant: RemoteParticipant, video: RemoteVideo) {
             remoteVideos.value += video
         }
@@ -188,6 +205,9 @@ class ConferenceService : LifecycleService() {
         val isAudioAlwaysOn get() = localAudio.value?.isAlwaysOn == true
 
         fun setCameraEnabled(enabled: Boolean) = impl.setCameraEnabled(enabled)
+        fun shareScreen(data: Intent) = impl.shareScreen(data)
+        fun stopShareScreen() = impl.stopShareScreen()
+
         fun setAudioEnabled(enabled: Boolean) = impl.setAudioEnabled(enabled)
         fun setAudioAlwaysOn(alwaysOn: Boolean): Boolean = localAudio.value?.apply {
             isAlwaysOn = alwaysOn

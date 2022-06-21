@@ -1,12 +1,15 @@
 package io.kakaoi.connectlive.demo.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.CompoundButton
+import androidx.activity.result.ActivityResultCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import io.kakaoi.connectlive.VideoCapturerFactory
 import io.kakaoi.connectlive.demo.ConferenceService
 import io.kakaoi.connectlive.demo.R
 import io.kakaoi.connectlive.demo.databinding.CellRemoteVideoBinding
@@ -30,6 +33,11 @@ class ConferenceFragment : Fragment() {
     private val service get() = _service.getCompleted()
 
     private val selectedVideos = MutableStateFlow(emptyArray<RemoteVideo?>())
+
+    private val shareScreen = registerForActivityResult(
+        VideoCapturerFactory.CreateScreenCapture,
+        ActivityResultCallback(::onScreenCaptureResult)
+    )
 
     init {
         setHasOptionsMenu(true)
@@ -81,8 +89,12 @@ class ConferenceFragment : Fragment() {
                 }
             }
 
-            screenShared.setOnClickListener {
-                // TODO
+            screenShared.setOnClickListener { button ->
+                check(button is CompoundButton)
+                if (button.isChecked)
+                    shareScreen.launch(Unit)
+                else
+                    service.stopShareScreen()
             }
 
             audioEnabled.setOnClickListener { button ->
@@ -193,8 +205,9 @@ class ConferenceFragment : Fragment() {
             .onEach {
                 binding.localMedia.screen.apply {
                     isVisible = it != null
-                    bind(it)
+                    bind(it?.video)
                 }
+                binding.localMedia.screenShared.isChecked = it != null
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -205,6 +218,13 @@ class ConferenceFragment : Fragment() {
                 }.toTypedArray()
             }
             .launchIn(viewLifecycleScope)
+    }
+
+    private fun onScreenCaptureResult(data: Intent?) {
+        if (data != null)
+            service.shareScreen(data)
+        else
+            binding.localMedia.screenShared.isChecked = false
     }
 
     private fun setCellCount(count: Int) {
