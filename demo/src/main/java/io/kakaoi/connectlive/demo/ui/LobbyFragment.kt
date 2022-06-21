@@ -52,6 +52,12 @@ class LobbyFragment : Fragment() {
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        localCamera?.start()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -1,5 +1,6 @@
 package io.kakaoi.connectlive.demo
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.util.Log
 import androidx.lifecycle.LifecycleService
 import io.kakaoi.connectlive.*
 import io.kakaoi.connectlive.demo.util.Preferences
+import io.kakaoi.connectlive.demo.util.isGranted
 import io.kakaoi.connectlive.media.LocalAudio
 import io.kakaoi.connectlive.media.LocalCamera
 import io.kakaoi.connectlive.media.LocalVideo
@@ -17,12 +19,15 @@ import io.kakaoi.connectlive.utils.AudioHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class ConferenceService : LifecycleService() {
 
     private val state = MutableStateFlow<State>(State.DISCONNECTED)
     private lateinit var room: Room
     private val localCamera = MutableStateFlow<LocalCamera?>(null)
+    private val localScreen = MutableStateFlow<LocalVideo?>(null)
     private val localAudio = MutableStateFlow<LocalAudio?>(null)
     private val remoteVideos = MutableStateFlow<List<RemoteVideo>>(emptyList())
 
@@ -72,6 +77,11 @@ class ConferenceService : LifecycleService() {
         super.onStartCommand(intent, flags, startId)
         requireNotNull(intent)
 
+        if (intent.action == ACTION_STOP) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
         val roomId = intent.getStringExtra(ARG_ROOM_ID)
 
         room.connect(requireNotNull(roomId))
@@ -114,6 +124,25 @@ class ConferenceService : LifecycleService() {
         ConnectLive.signOut()
     }
 
+    private fun setCameraEnabled(enabled: Boolean) {
+        if (enabled) {
+            check(isGranted(Manifest.permission.CAMERA))
+            localCamera.value = (localCamera.value ?: ConnectLive.createLocalCamera())
+        }
+
+        localCamera.value?.isEnabled = enabled
+    }
+
+    private fun setAudioEnabled(enabled: Boolean) {
+        if (enabled) {
+            check(isGranted(Manifest.permission.RECORD_AUDIO))
+            localAudio.value = (localAudio.value ?: ConnectLive.createLocalAudio())
+        }
+
+        localAudio.value?.isEnabled = enabled
+    }
+
+
     private inner class OnEvents : EventsCallback {
         override fun onConnecting(progress: Float) {
             state.value = State.CONNECTING(progress)
@@ -147,10 +176,33 @@ class ConferenceService : LifecycleService() {
 
     inner class Binder : android.os.Binder() {
         private val impl = this@ConferenceService
+        val localParticipant get() = impl.room.localParticipant
         val localCamera get() = impl.localCamera.asStateFlow()
+        val localScreen get() = impl.localScreen.asStateFlow()
         val localAudio get() = impl.localAudio.asStateFlow()
         val remoteVideos get() = impl.remoteVideos.asStateFlow()
         val remoteParticipants get() = impl.room.remoteParticipants.values
+
+        val isCameraEnabled get() = localCamera.value?.isEnabled == true
+        val isAudioEnabled get() = localAudio.value?.isEnabled == true
+        val isAudioAlwaysOn get() = localAudio.value?.isAlwaysOn == true
+
+        fun setCameraEnabled(enabled: Boolean) = impl.setCameraEnabled(enabled)
+        fun setAudioEnabled(enabled: Boolean) = impl.setAudioEnabled(enabled)
+        fun setAudioAlwaysOn(alwaysOn: Boolean): Boolean = localAudio.value?.apply {
+            isAlwaysOn = alwaysOn
+        } != null
+
+        suspend fun switchCamera(): Boolean = suspendCoroutine { cont ->
+            val camera = localCamera.value
+            if (camera == null) {
+                cont.resume(false)
+            } else {
+                camera.switchCamera().thenAccept {
+                    cont.resume(it)
+                }
+            }
+        }
     }
 
     sealed class State {
@@ -161,6 +213,8 @@ class ConferenceService : LifecycleService() {
 
     companion object {
         private const val TAG = "ConferenceService"
+
+        private const val ACTION_STOP = "io.kakaoi.connectlive.demo.STOP"
 
         private const val ARG_ROOM_ID = "roomId"
         private const val ARG_CAMERA_ENABLED = "cameraEnabled"
@@ -191,6 +245,8 @@ class ConferenceService : LifecycleService() {
 
         fun stop(context: Context) {
             context.stopService(createIntent(context))
+
+            // OR context.startService(createIntent(context).setAction(ACTION_STOP))
         }
 
         suspend fun bind(context: Context, onBind: (Binder) -> Unit): Nothing =

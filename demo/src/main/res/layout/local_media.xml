@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:showIn="@layout/fragment_conference">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <io.kakaoi.connectlive.view.VideoRenderer
+            android:id="@+id/camera"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="2dp" />
+
+        <io.kakaoi.connectlive.view.VideoRenderer
+            android:id="@+id/screen"
+            android:layout_width="45dp"
+            android:layout_height="80dp"
+            android:layout_margin="2dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/my_pid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="Participant ID: 1234" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/camera_enabled"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/camera" />
+
+        <ToggleButton
+            android:id="@+id/camera_facing"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:enabled="false"
+            android:textOff="@string/rear"
+            android:textOn="@string/front" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/screen_shared"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:enabled="false"
+            android:text="@string/screen" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/audio_enabled"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/audio" />
+
+        <CheckBox
+            android:id="@+id/audio_always_on"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:enabled="false"
+            android:text="@string/always_on" />
+
+    </GridLayout>
+
+</LinearLayout>

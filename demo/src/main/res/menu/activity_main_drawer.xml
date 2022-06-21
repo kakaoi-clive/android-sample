@@ -5,7 +5,11 @@
 
     <item
         android:id="@+id/action_preferences"
-        android:title="Preferences" />
+        android:title="@string/preferences" />
+
+    <item
+        android:id="@+id/action_disconnect"
+        android:title="@string/disconnect" />
 
     <item
         android:id="@+id/action_log"

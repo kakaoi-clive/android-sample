@@ -2,6 +2,7 @@ package io.kakaoi.connectlive.demo.ui
 
 import android.os.Bundle
 import android.view.*
+import android.widget.CompoundButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -11,6 +12,7 @@ import io.kakaoi.connectlive.demo.R
 import io.kakaoi.connectlive.demo.databinding.CellRemoteVideoBinding
 import io.kakaoi.connectlive.demo.databinding.FragmentConferenceBinding
 import io.kakaoi.connectlive.media.RemoteVideo
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,10 +21,14 @@ import java.util.*
 
 class ConferenceFragment : Fragment() {
 
+    private val viewLifecycleScope get() = viewLifecycleOwner.lifecycleScope
+
     private var _binding: FragmentConferenceBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private lateinit var service: ConferenceService.Binder
+    private val _service = CompletableDeferred<ConferenceService.Binder>()
+    private val service get() = _service.getCompleted()
+
     private val selectedVideos = MutableStateFlow(emptyArray<RemoteVideo?>())
 
     init {
@@ -41,7 +47,7 @@ class ConferenceFragment : Fragment() {
     ): View = FragmentConferenceBinding.inflate(inflater, container, false).also {
         _binding = it
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleScope.launch {
             ConferenceService.bind(requireContext(), ::onServiceBind)
         }
 
@@ -52,8 +58,55 @@ class ConferenceFragment : Fragment() {
                     cell.video.bind(videos.getOrNull(index))
                 }
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+            .launchIn(viewLifecycleScope)
+
+        with(binding.localMedia) {
+            camera.setZOrderOnTop(true)
+            screen.setZOrderOnTop(true)
+
+            cameraEnabled.setOnClickListener { button ->
+                check(button is CompoundButton)
+                service.setCameraEnabled(button.isChecked)
+            }
+
+            cameraEnabled.setOnCheckedChangeListener { _, isChecked ->
+                cameraFacing.isEnabled = isChecked
+            }
+
+            cameraFacing.setOnClickListener { button ->
+                check(button is CompoundButton)
+
+                viewLifecycleScope.launch {
+                    button.isChecked = service.switchCamera()
+                }
+            }
+
+            screenShared.setOnClickListener {
+                // TODO
+            }
+
+            audioEnabled.setOnClickListener { button ->
+                check(button is CompoundButton)
+                service.setAudioEnabled(button.isChecked)
+            }
+
+            audioEnabled.setOnCheckedChangeListener { _, isChecked ->
+                audioAlwaysOn.isEnabled = isChecked
+            }
+
+            audioAlwaysOn.setOnClickListener { button ->
+                check(button is CompoundButton)
+                service.setAudioAlwaysOn(button.isChecked)
+            }
+        }
     }.root
+
+    override fun onResume() {
+        super.onResume()
+        runCatching {
+            service.localCamera.value?.start()
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.conference, menu)
@@ -104,9 +157,9 @@ class ConferenceFragment : Fragment() {
         _binding = null
     }
 
-    private fun onFragmentResult(requestKey: String, bundle: Bundle) {
+    private fun onFragmentResult(requestKey: String, result: Bundle) {
         when (requestKey) {
-            REQUEST_PICK_VIDEO -> PickVideosDialogFragment.handleResult(bundle) { selected ->
+            REQUEST_PICK_VIDEO -> PickVideosDialogFragment.handleResult(result) { selected ->
                 val newSelection = service.remoteVideos.value
                     .filter { it.id in selected }
                     .toCollection(LinkedList())
@@ -120,7 +173,30 @@ class ConferenceFragment : Fragment() {
     }
 
     private fun onServiceBind(service: ConferenceService.Binder) {
-        this.service = service
+        _service.complete(service)
+
+        binding.localMedia.myPid.text =
+            getString(R.string.my_pid_is_arg, service.localParticipant.id)
+
+        binding.localMedia.cameraEnabled.isChecked = service.isCameraEnabled
+        binding.localMedia.audioEnabled.isChecked = service.isAudioEnabled
+        binding.localMedia.audioAlwaysOn.isChecked = service.isAudioAlwaysOn
+
+        service.localCamera
+            .onEach {
+                binding.localMedia.camera.bind(it)
+                binding.localMedia.cameraFacing.isChecked = it?.isFrontFacing == true
+            }
+            .launchIn(viewLifecycleScope)
+
+        service.localScreen
+            .onEach {
+                binding.localMedia.screen.apply {
+                    isVisible = it != null
+                    bind(it)
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
 
         service.remoteVideos
             .onEach { availables ->
@@ -128,7 +204,7 @@ class ConferenceFragment : Fragment() {
                     it?.takeIf { it in availables }
                 }.toTypedArray()
             }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+            .launchIn(viewLifecycleScope)
     }
 
     private fun setCellCount(count: Int) {

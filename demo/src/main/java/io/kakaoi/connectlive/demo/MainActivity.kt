@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
@@ -72,10 +73,6 @@ class MainActivity : AppCompatActivity() {
             else ConferenceService.start(this, roomId, cameraEnabled, micEnabled, preferFrontCamera)
         }
 
-        binding.disconnect.setOnClickListener {
-            ConferenceService.stop(this)
-        }
-
         ConferenceService.state
             .onEach(::onServiceStateChanged)
             .launchIn(lifecycleScope)
@@ -91,6 +88,7 @@ class MainActivity : AppCompatActivity() {
     private fun onNavigationItemSelected(item: MenuItem): Boolean {
         binding.drawerLayout.close()
         when (item.itemId) {
+            R.id.action_disconnect -> ConferenceService.stop(this)
             R.id.action_preferences -> startActivity(Intent(this, PreferencesActivity::class.java))
         }
         return true
@@ -105,11 +103,19 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onBackPressed() = when {
-        binding.drawerLayout.isOpen -> binding.drawerLayout.close()
-        ConferenceService.state.value != ConferenceService.State.DISCONNECTED ->
-            ConferenceService.stop(this)
-        else -> super.onBackPressed()
+    override fun onBackPressed() {
+        when {
+            binding.drawerLayout.isOpen -> binding.drawerLayout.close()
+            ConferenceService.state.value != ConferenceService.State.DISCONNECTED ->
+                AlertDialog.Builder(this)
+                    .setMessage(R.string.message_stop_conference)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.stop) { _, _ ->
+                        ConferenceService.stop(this)
+                    }
+                    .show()
+            else -> super.onBackPressed()
+        }
     }
 
     private fun onServiceStateChanged(state: ConferenceService.State) {
@@ -126,8 +132,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.connect.isVisible = state == ConferenceService.State.DISCONNECTED
 
-        binding.disconnect.isVisible = state == ConferenceService.State.CONNECTED
-
         binding.connecting.isVisible = state is ConferenceService.State.CONNECTING
 
         if (state is ConferenceService.State.CONNECTING) {
@@ -136,5 +140,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.navView.menu.findItem(R.id.action_preferences).isEnabled =
             state == ConferenceService.State.DISCONNECTED
+
+        binding.navView.menu.findItem(R.id.action_disconnect).isEnabled =
+            state == ConferenceService.State.CONNECTED
     }
 }

@@ -58,16 +58,6 @@
             android:contentDescription="@string/connect"
             app:srcCompat="@android:drawable/ic_menu_call" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/disconnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:contentDescription="@string/disconnect"
-            android:visibility="gone"
-            app:srcCompat="@android:drawable/ic_lock_power_off" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView

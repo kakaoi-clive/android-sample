@@ -35,4 +35,11 @@
     <string name="layout_3x2">3x2</string>
     <string name="layout_4x2">4x2</string>
     <string name="title_pick_videos">Pick videos</string>
+    <string name="screen">Screen</string>
+    <string name="audio">Audio</string>
+    <string name="always_on">Always on</string>
+    <string name="my_pid_is_arg">Participant ID: %s</string>
+    <string name="preferences">Preferences</string>
+    <string name="stop">stop</string>
+    <string name="message_stop_conference">Stop conference?</string>
 </resources>
