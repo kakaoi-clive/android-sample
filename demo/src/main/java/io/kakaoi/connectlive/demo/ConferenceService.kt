@@ -1,26 +1,30 @@
 package io.kakaoi.connectlive.demo
 
 import android.Manifest
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.app.PendingIntent
+import android.content.*
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import io.kakaoi.connectlive.*
 import io.kakaoi.connectlive.demo.util.Preferences
 import io.kakaoi.connectlive.demo.util.isGranted
+import io.kakaoi.connectlive.demo.util.onReceive
 import io.kakaoi.connectlive.media.*
 import io.kakaoi.connectlive.utils.AudioHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class ConferenceService : LifecycleService() {
-
+    private lateinit var notificationManager: NotificationManagerCompat
     private val state = MutableStateFlow<State>(State.DISCONNECTED)
     private lateinit var room: Room
     private val localCamera = MutableStateFlow<LocalCamera?>(null)
@@ -30,6 +34,9 @@ class ConferenceService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+
+        notificationManager = NotificationManagerCompat.from(this)
+
         _state.value = state
 
         val prefs = Preferences.default(this)
@@ -49,11 +56,8 @@ class ConferenceService : LifecycleService() {
                 requireNotNull(prefs.getString(getString(R.string.key_provisioning_url), null))
 
             errorHandler = ErrorHandler { code, message, isFatal ->
-                Log.println(
-                    if (isFatal) Log.ERROR else Log.WARN,
-                    TAG,
-                    "onError(signIn): [$code] $message"
-                )
+                val priority = if (isFatal) Log.ERROR else Log.WARN
+                Log.println(priority, TAG, "onError(signIn): [$code] $message")
             }
         }
 
@@ -68,6 +72,10 @@ class ConferenceService : LifecycleService() {
         AudioHelper.acquireFocus(this)
 
         room = ConnectLive.createRoom(events = OnEvents())
+
+        lifecycleScope.launch {
+            onReceive(IntentFilter(ACTION_STOP)) { _, _ -> stopSelf() }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -78,6 +86,9 @@ class ConferenceService : LifecycleService() {
             stopSelf()
             return START_NOT_STICKY
         }
+
+        createNotificationChannel()
+        startForeground()
 
         val roomId = intent.getStringExtra(ARG_ROOM_ID)
 
@@ -119,6 +130,35 @@ class ConferenceService : LifecycleService() {
         AudioHelper.releaseFocus()
 
         ConnectLive.signOut()
+    }
+
+    private fun createNotificationChannel() {
+        val channel = NotificationChannelCompat
+            .Builder(NOTIFICATION_CHANNEL, NotificationManagerCompat.IMPORTANCE_DEFAULT)
+            .setName(getString(R.string.notification_channel_name))
+            .build()
+
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun startForeground() {
+        val contentIntent = Intent(this, MainActivity::class.java).let {
+            PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
+        }
+
+        val stopIntent = Intent(ACTION_STOP).let {
+            PendingIntent.getBroadcast(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
+        }
+
+        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL)
+            .setContentTitle(getString(R.string.title_ongoing_meeting))
+            .setContentIntent(contentIntent)
+            .setAutoCancel(false)
+            .addAction(0, getString(R.string.stop), stopIntent)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .build()
+
+        startForeground(NOTIFICATION_FOREGROUND, notification)
     }
 
     private fun setCameraEnabled(enabled: Boolean) {
@@ -236,6 +276,9 @@ class ConferenceService : LifecycleService() {
 
         private const val ACTION_STOP = "io.kakaoi.connectlive.demo.STOP"
 
+        private const val NOTIFICATION_CHANNEL = "conference-notification"
+        private const val NOTIFICATION_FOREGROUND = 1
+
         private const val ARG_ROOM_ID = "roomId"
         private const val ARG_CAMERA_ENABLED = "cameraEnabled"
         private const val ARG_MIC_ENABLED = "micEnabled"
@@ -265,8 +308,6 @@ class ConferenceService : LifecycleService() {
 
         fun stop(context: Context) {
             context.stopService(createIntent(context))
-
-            // OR context.startService(createIntent(context).setAction(ACTION_STOP))
         }
 
         suspend fun bind(context: Context, onBind: (Binder) -> Unit): Nothing =

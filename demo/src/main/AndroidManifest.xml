@@ -13,11 +13,13 @@
 
         <service
             android:name=".ConferenceService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:foregroundServiceType="camera|mediaProjection" />
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.Icl2Demo.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

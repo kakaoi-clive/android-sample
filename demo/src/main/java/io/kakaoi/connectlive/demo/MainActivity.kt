@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (findFragmentById(R.id.content)?.javaClass != fragmentClass) {
-                commit { replace(R.id.content, fragmentClass.newInstance()) }
+                commit(allowStateLoss = true) { replace(R.id.content, fragmentClass.newInstance()) }
             }
         }
 

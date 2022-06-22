@@ -42,4 +42,6 @@
     <string name="preferences">Preferences</string>
     <string name="stop">stop</string>
     <string name="message_stop_conference">Stop conference?</string>
+    <string name="title_ongoing_meeting">Video conference in progress</string>
+    <string name="notification_channel_name">Video conference</string>
 </resources>
