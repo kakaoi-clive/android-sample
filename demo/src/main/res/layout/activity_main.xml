@@ -49,6 +49,14 @@
 
         </FrameLayout>
 
+        <io.kakaoi.connectlive.demo.widget.LogView
+            android:id="@+id/log_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/connect"
             android:layout_width="wrap_content"

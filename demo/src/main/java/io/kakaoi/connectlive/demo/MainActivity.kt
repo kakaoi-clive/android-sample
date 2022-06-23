@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_disconnect -> ConferenceService.stop(this)
             R.id.action_preferences -> startActivity(Intent(this, PreferencesActivity::class.java))
+            R.id.action_log -> binding.logScreen.isVisible = !binding.logScreen.isVisible
         }
         return true
     }
@@ -106,6 +107,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         when {
             binding.drawerLayout.isOpen -> binding.drawerLayout.close()
+            binding.logScreen.isVisible -> binding.logScreen.isVisible = false
             ConferenceService.state.value != ConferenceService.State.DISCONNECTED ->
                 AlertDialog.Builder(this)
                     .setMessage(R.string.message_stop_conference)
