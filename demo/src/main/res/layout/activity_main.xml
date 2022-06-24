@@ -53,7 +53,8 @@
             android:id="@+id/log_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="32dp"
             android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

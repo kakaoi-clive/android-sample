@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/logs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:alpha="0.5"
+        android:layout_height="match_parent"
+        android:alpha="0.8"
         android:background="?attr/scrimBackground"
-        android:clickable="false"
         android:gravity="bottom"
-        android:textSize="8sp"
-        tools:ignore="SmallSp" />
+        android:textSize="12sp" />
 
     <ImageButton
         android:id="@+id/close_log"

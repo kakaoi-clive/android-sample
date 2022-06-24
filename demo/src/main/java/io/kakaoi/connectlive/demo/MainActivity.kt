@@ -17,6 +17,7 @@ import io.kakaoi.connectlive.demo.databinding.NavHeaderMainBinding
 import io.kakaoi.connectlive.demo.ui.ConferenceFragment
 import io.kakaoi.connectlive.demo.ui.LobbyFragment
 import io.kakaoi.connectlive.demo.util.Preferences
+import io.kakaoi.connectlive.utils.Logger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -76,6 +77,13 @@ class MainActivity : AppCompatActivity() {
         ConferenceService.state
             .onEach(::onServiceStateChanged)
             .launchIn(lifecycleScope)
+
+        Logger.addLogger(binding.logScreen)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Logger.removeLogger(binding.logScreen)
     }
 
     override fun setSupportActionBar(toolbar: Toolbar?) {
