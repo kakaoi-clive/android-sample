@@ -99,6 +99,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_disconnect -> ConferenceService.stop(this)
             R.id.action_preferences -> startActivity(Intent(this, PreferencesActivity::class.java))
             R.id.action_log -> binding.logScreen.isVisible = !binding.logScreen.isVisible
+//            R.id.action_top ->
         }
         return true
     }

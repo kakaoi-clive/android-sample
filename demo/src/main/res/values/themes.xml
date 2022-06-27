@@ -15,7 +15,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.Icl2Demo.DialogWhenLarge" parent="Theme.MaterialComponents.DayNight.DialogWhenLarge" />
+
     <style name="Theme.Icl2Demo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Icl2Demo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

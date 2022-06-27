@@ -153,7 +153,6 @@ class ConferenceFragment : Fragment() {
             }
             R.id.action_select_videos -> PickVideosDialogFragment
                 .newInstance(
-                    service.remoteParticipants,
                     selectedVideos.value.filterNotNull(),
                     selectedVideos.value.size
                 )
