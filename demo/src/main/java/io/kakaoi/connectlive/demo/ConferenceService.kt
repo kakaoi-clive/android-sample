@@ -239,6 +239,7 @@ class ConferenceService : LifecycleService() {
         val localAudio get() = impl.localAudio.asStateFlow()
         val remoteVideos get() = impl.remoteVideos.asStateFlow()
         val remoteParticipants get() = impl.room.remoteParticipants.values
+        val audioLevels get() = impl.room.getAudioLevels()
 
         val isCameraEnabled get() = localCamera.value?.isEnabled == true
         val isAudioEnabled get() = localAudio.value?.isEnabled == true

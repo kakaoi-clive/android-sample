@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CellRemoteVideo"
     android:padding="4dp"
+    tools:ignore="SmallSp"
     tools:showIn="@layout/fragment_conference">
 
     <io.kakaoi.connectlive.view.VideoRenderer
@@ -14,21 +15,29 @@
         android:id="@+id/stream_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:shadowColor="?attr/colorOnBackground"
-        android:shadowRadius="4"
-        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-        android:textSize="10sp"
-        tools:ignore="SmallSp" />
+        android:shadowColor="?colorOnPrimary"
+        android:shadowRadius="2"
+        android:textColor="?colorPrimary"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/frame_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="end|bottom"
-        android:shadowColor="?attr/colorOnBackground"
-        android:shadowRadius="4"
-        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-        android:textSize="10sp"
-        tools:ignore="SmallSp" />
+        android:shadowColor="?colorOnSecondary"
+        android:shadowRadius="2"
+        android:textColor="?colorSecondary"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/audio_level"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:shadowColor="?colorOnError"
+        android:shadowRadius="2"
+        android:textColor="?colorError"
+        android:textSize="10sp" />
 
 </FrameLayout>

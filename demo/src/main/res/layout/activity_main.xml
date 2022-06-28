@@ -21,8 +21,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:layout_height="?actionBarSize"
+                android:background="?colorPrimary"
                 app:popupTheme="@style/Theme.Icl2Demo.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -37,7 +37,7 @@
             android:id="@+id/connecting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/scrimBackground"
+            android:background="?scrimBackground"
             android:visibility="gone">
 
             <com.google.android.material.progressindicator.CircularProgressIndicator

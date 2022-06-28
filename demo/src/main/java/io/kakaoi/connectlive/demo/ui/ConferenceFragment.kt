@@ -73,7 +73,8 @@ class ConferenceFragment : Fragment() {
                     cell.root.isVisible = index < videos.size
                     val video = videos.getOrNull(index)
                     cell.video.bind(video)
-                    cell.streamInfo.text = video?.run { "owner=$owner\nid=$id\n${extraValue.orEmpty()}" }
+                    cell.streamInfo.text =
+                        video?.run { "owner=$owner\nid=$id\n${extraValue.orEmpty()}" }
                     cell.streamInfo.setOnClickListener { video?.showStats(it.context) }
                     cell.frameInfo.text = null
                 }
@@ -206,19 +207,25 @@ class ConferenceFragment : Fragment() {
         binding.localMedia.audioAlwaysOn.isChecked = service.isAudioAlwaysOn
 
         service.localCamera
-            .onEach {
-                binding.localMedia.camera.bind(it)
-                binding.localMedia.cameraFacing.isChecked = it?.isFrontFacing == true
+            .onEach { camera ->
+                binding.localMedia.camera.bind(camera)
+                binding.localMedia.cameraFacing.isChecked = camera?.isFrontFacing == true
+                binding.localMedia.camera.setOnClickListener {
+                    camera?.showStats(it.context)
+                }
             }
             .launchIn(viewLifecycleScope)
 
         service.localScreen
-            .onEach {
+            .onEach { screen ->
                 binding.localMedia.screen.apply {
-                    isVisible = it != null
-                    bind(it?.video)
+                    isVisible = screen != null
+                    bind(screen?.video)
                 }
-                binding.localMedia.screenShared.isChecked = it != null
+                binding.localMedia.screenShared.isChecked = screen != null
+                binding.localMedia.screen.setOnClickListener {
+                    screen?.video?.showStats(it.context)
+                }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
@@ -229,6 +236,13 @@ class ConferenceFragment : Fragment() {
                 }.toTypedArray()
             }
             .launchIn(viewLifecycleScope)
+
+        service.audioLevels
+            .observe(viewLifecycleOwner) { levels ->
+                binding.cells.zip(selectedVideos.value) { cell, video ->
+                    cell.audioLevel.text = levels[video?.owner]?.let { "Audio Level=$it" }
+                }
+            }
     }
 
     private fun onScreenCaptureResult(data: Intent?) {

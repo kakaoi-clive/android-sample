@@ -23,14 +23,14 @@
 
         <Button
             android:id="@+id/apply_button"
-            style="?attr/borderlessButtonStyle"
+            style="?borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@android:string/ok" />
 
         <Button
             android:id="@+id/cancel_button"
-            style="?attr/borderlessButtonStyle"
+            style="?borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@android:string/cancel" />
