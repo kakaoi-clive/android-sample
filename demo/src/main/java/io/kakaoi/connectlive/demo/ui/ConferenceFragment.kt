@@ -15,6 +15,7 @@ import io.kakaoi.connectlive.demo.R
 import io.kakaoi.connectlive.demo.databinding.CellRemoteVideoBinding
 import io.kakaoi.connectlive.demo.databinding.FragmentConferenceBinding
 import io.kakaoi.connectlive.media.RemoteVideo
+import io.kakaoi.connectlive.utils.showStats
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -59,11 +60,22 @@ class ConferenceFragment : Fragment() {
             ConferenceService.bind(requireContext(), ::onServiceBind)
         }
 
+        binding.cells.forEach { binding ->
+            binding.video.onFrameInfoListener = {
+                binding.frameInfo.text = it.entries
+                    .joinToString("\n") { (key, value) -> "$key=$value" }
+            }
+        }
+
         selectedVideos
             .onEach { videos ->
                 binding.cells.forEachIndexed { index, cell ->
                     cell.root.isVisible = index < videos.size
-                    cell.video.bind(videos.getOrNull(index))
+                    val video = videos.getOrNull(index)
+                    cell.video.bind(video)
+                    cell.streamInfo.text = video?.run { "owner=$owner\nid=$id\n${extraValue.orEmpty()}" }
+                    cell.streamInfo.setOnClickListener { video?.showStats(it.context) }
+                    cell.frameInfo.text = null
                 }
             }
             .launchIn(viewLifecycleScope)

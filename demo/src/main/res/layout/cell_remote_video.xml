@@ -2,12 +2,33 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/CellRemoteVideo"
-    android:padding="8dp"
+    android:padding="4dp"
     tools:showIn="@layout/fragment_conference">
 
     <io.kakaoi.connectlive.view.VideoRenderer
         android:id="@+id/video"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/stream_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:shadowColor="?attr/colorOnBackground"
+        android:shadowRadius="4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/frame_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|bottom"
+        android:shadowColor="?attr/colorOnBackground"
+        android:shadowRadius="4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 </FrameLayout>

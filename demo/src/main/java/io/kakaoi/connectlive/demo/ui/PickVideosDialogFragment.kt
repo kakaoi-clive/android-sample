@@ -251,7 +251,12 @@ class PickVideosDialogFragment : DialogFragment() {
             }
 
             override fun bind(item: VideoContent) {
-                binding.videoName.text = item.extraValue ?: "camera"
+                binding.videoName.text = buildString {
+                    append(item.extraValue ?: "camera")
+                    append("(id=")
+                    append(item.id)
+                    append(")")
+                }
                 binding.videoName.isChecked = item.id in selected.value
                 binding.videoName.isEnabled = item is RemoteVideo
                 binding.profile.isEnabled = item is RemoteVideo
