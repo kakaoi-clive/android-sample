@@ -3,9 +3,11 @@ package io.kakaoi.connectlive.demo
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.TwoStatePreference
+import io.kakaoi.connectlive.ConnectLive
 
 class PreferencesActivity : AppCompatActivity() {
 
@@ -34,6 +36,38 @@ class PreferencesActivity : AppCompatActivity() {
                 setOnPreferenceChangeListener { _, newValue ->
                     onCheckedExternal(newValue == true)
                     true
+                }
+            }
+
+            findPreference<EditTextPreference>(getString(R.string.key_api_url))?.run {
+                setOnPreferenceChangeListener { _, value ->
+                    ConnectLive.forcedApiServer = value?.toString()
+                    text = ConnectLive.forcedApiServer
+                    false
+                }
+            }
+
+            findPreference<EditTextPreference>(getString(R.string.key_turn_server))?.run {
+                setOnPreferenceChangeListener { _, value ->
+                    ConnectLive.forcedTurnUrls = value?.toString()?.split(',')
+                    text = ConnectLive.forcedTurnUrls?.joinToString()
+                    false
+                }
+
+            }
+            findPreference<EditTextPreference>(getString(R.string.key_turn_username))?.run {
+                setOnPreferenceChangeListener { _, value ->
+                    ConnectLive.forcedTurnUsername = value?.toString()
+                    text = ConnectLive.forcedTurnUsername
+                    false
+                }
+            }
+
+            findPreference<EditTextPreference>(getString(R.string.key_turn_credential))?.run {
+                setOnPreferenceChangeListener { _, value ->
+                    ConnectLive.forcedTurnCredential = value?.toString()
+                    text = ConnectLive.forcedTurnCredential
+                    false
                 }
             }
         }

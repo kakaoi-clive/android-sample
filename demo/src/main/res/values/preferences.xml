@@ -15,4 +15,8 @@
     <string name="key_mic_enabled">key_mic_enabled</string>
     <string name="key_speaker_device">key_speaker_device</string>
     <string name="key_room_id">key_room_id</string>
+
+    <string name="default_service_id">202200000000</string>
+    <string name="default_service_key">2022000000000000</string>
+    <string name="default_service_secret">2022000000000000</string>
 </resources>

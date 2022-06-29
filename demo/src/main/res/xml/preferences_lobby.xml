@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <CheckBoxPreference
+        app:defaultValue="false"
         app:key="@string/key_camera_enabled"
         app:title="@string/camera" />
 

@@ -75,7 +75,7 @@ class LobbyFragment : Fragment() {
     }
 
     private fun onCameraEnabled(enabled: Boolean) {
-        if (localCamera == null)
+        if (enabled && localCamera == null)
             localCamera = ConnectLive.createLocalCamera(panel.cameraFront.isChecked)
 
         localCamera?.isEnabled = enabled
