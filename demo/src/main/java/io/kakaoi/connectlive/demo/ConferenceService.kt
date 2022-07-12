@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.*
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -195,6 +196,7 @@ class ConferenceService : LifecycleService() {
         localAudio.value?.isEnabled = enabled
     }
 
+    private fun sendUserMessage(message : String) = room.sendUserMessage(message)
 
     private inner class OnEvents : EventsCallback {
         override fun onConnecting(progress: Float) {
@@ -229,6 +231,10 @@ class ConferenceService : LifecycleService() {
         override fun onRemoteVideoUnpublished(participant: RemoteParticipant, video: RemoteVideo) {
             remoteVideos.value -= video
         }
+
+        override fun onUserMessage(senderId: String, message: String) {
+            Toast.makeText(this@ConferenceService, "(onUserMessage) $senderId : $message", Toast.LENGTH_SHORT).show()
+        }
     }
 
     inner class Binder : android.os.Binder() {
@@ -253,6 +259,8 @@ class ConferenceService : LifecycleService() {
         fun setAudioAlwaysOn(alwaysOn: Boolean): Boolean = localAudio.value?.apply {
             isAlwaysOn = alwaysOn
         } != null
+
+        fun sendUserMessage(message : String) = impl.sendUserMessage(message)
 
         suspend fun switchCamera(): Boolean = suspendCoroutine { cont ->
             val camera = localCamera.value

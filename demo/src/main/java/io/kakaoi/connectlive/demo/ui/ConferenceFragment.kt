@@ -2,9 +2,12 @@ package io.kakaoi.connectlive.demo.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
 import android.widget.CompoundButton
+import android.widget.EditText
 import androidx.activity.result.ActivityResultCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -122,6 +125,22 @@ class ConferenceFragment : Fragment() {
             audioAlwaysOn.setOnClickListener { button ->
                 check(button is CompoundButton)
                 service.setAudioAlwaysOn(button.isChecked)
+            }
+
+            sendMessage.setOnClickListener { view ->
+                val input = EditText(view.context).apply {
+                    hint = context.getString(R.string.please_input_message)
+                    inputType = InputType.TYPE_CLASS_TEXT
+                }
+                AlertDialog.Builder(view.context)
+                    .setTitle(getString(R.string.send_message))
+                    .setView(input)
+                    .setPositiveButton(getString(R.string.send)) { _, _ ->
+                        service.sendUserMessage(input.text.toString())
+                    }
+                    .setNegativeButton(getString(R.string.close)) { dialog, _ ->
+                        dialog.dismiss()
+                    }.show()
             }
         }
     }.root
@@ -245,12 +264,9 @@ class ConferenceFragment : Fragment() {
             }
     }
 
-    private fun onScreenCaptureResult(data: Intent?) {
-        if (data != null)
-            service.shareScreen(data)
-        else
-            binding.localMedia.screenShared.isChecked = false
-    }
+    private fun onScreenCaptureResult(data: Intent?) =
+        if (data != null) service.shareScreen(data)
+        else binding.localMedia.screenShared.isChecked = false
 
     private fun setCellCount(count: Int) {
         selectedVideos.value = selectedVideos.value.copyOf(count)

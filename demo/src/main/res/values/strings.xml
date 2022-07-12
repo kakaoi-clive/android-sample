@@ -37,6 +37,8 @@
     <string name="title_pick_videos">Pick videos</string>
     <string name="screen">Screen</string>
     <string name="audio">Audio</string>
+    <string name="message">Message</string>
+    <string name="send">SEND</string>
     <string name="always_on">Always on</string>
     <string name="my_pid_is_arg">Participant ID: %s</string>
     <string name="preferences">Preferences</string>
@@ -45,4 +47,6 @@
     <string name="title_ongoing_meeting">Video conference in progress</string>
     <string name="notification_channel_name">Video conference</string>
     <string name="close">Close</string>
+    <string name="please_input_message">please input message</string>
+    <string name="send_message">Send Message</string>
 </resources>

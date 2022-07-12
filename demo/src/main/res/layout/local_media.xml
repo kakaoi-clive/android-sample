@@ -84,6 +84,19 @@
             android:enabled="false"
             android:text="@string/always_on" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/message" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/send_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/send" />
+
     </GridLayout>
 
 </LinearLayout>
