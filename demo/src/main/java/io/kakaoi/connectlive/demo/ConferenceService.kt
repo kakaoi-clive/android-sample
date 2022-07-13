@@ -50,7 +50,7 @@ class ConferenceService : LifecycleService() {
                 token = prefs.getString(getString(R.string.key_token), null)
             } else {
                 serviceKey = prefs.getString(getString(R.string.key_service_key), null)
-                serviceSecret = prefs.getString(getString(R.string.key_secret), null)
+                secret = prefs.getString(getString(R.string.key_secret), null)
             }
 
             endpoint =
