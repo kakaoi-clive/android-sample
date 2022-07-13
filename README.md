@@ -84,7 +84,7 @@
        // endpoint = "https://icl2.provisioning.host/api/v1/rpc"
        serviceId = "************"
        serviceKey = "****************"
-       serviceSecret = "****************"
+       secret = "****************"
     
        errorHandler = ErrorHandler { code, message, isFatal ->
            // code, message : 별도로 정의된 에러 코드와 메세지
