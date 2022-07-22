@@ -196,8 +196,9 @@
     
        /**
         * 접속 종료
+        * 연결이 끊긴 이유 reason
         */
-       fun onDisconnected()
+       fun onDisconnected(reason: DisconnectedReason)
     
        /**
         * 에러 전달
