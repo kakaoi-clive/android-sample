@@ -15,6 +15,7 @@ import io.kakaoi.connectlive.*
 import io.kakaoi.connectlive.demo.util.Preferences
 import io.kakaoi.connectlive.demo.util.isGranted
 import io.kakaoi.connectlive.demo.util.onReceive
+import io.kakaoi.connectlive.entity.DisconnectedReason
 import io.kakaoi.connectlive.media.*
 import io.kakaoi.connectlive.utils.AudioHelper
 import kotlinx.coroutines.GlobalScope
@@ -208,7 +209,7 @@ class ConferenceService : LifecycleService() {
             remoteVideos.value = participants.flatMap { it.videos.values }
         }
 
-        override fun onDisconnected() {
+        override fun onDisconnected(reason: DisconnectedReason) {
             stopSelf()
         }
 

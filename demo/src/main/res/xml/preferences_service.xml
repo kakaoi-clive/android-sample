@@ -32,7 +32,7 @@
         tools:enabled="false" />
 
     <EditTextPreference
-        app:defaultValue="https://icl2-provisioning-dev.k9ertc.io/api/v1/rpc"
+        app:defaultValue="https://icl2-provisioning-ap2.k9ertc.io/api/rpc"
         app:key="@string/key_provisioning_url"
         app:title="@string/provisioning_server"
         app:useSimpleSummaryProvider="true" />
