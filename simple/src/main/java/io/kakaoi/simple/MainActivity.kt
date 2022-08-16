@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 camera?.stop()
                 camera?.dispose()
 
-                room.connect("icl2")
+                room.connect("")
                 val localMedia = ConnectLive.createLocalMedia().apply {
                     video?.isEnabled = true
                     audio?.isEnabled = true
