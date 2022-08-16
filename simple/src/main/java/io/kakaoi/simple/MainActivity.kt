@@ -36,9 +36,6 @@ class MainActivity : AppCompatActivity() {
             serviceKey = "ICLEXMPLPUBL0KEY"
             secret = "YOUR0SRVC0SECRET"
         }
-        AudioHelper.acquireFocus(this)
-        room = ConnectLive.createRoom(events = OnEventListener())
-
         requestPermissionForActivateMedia.launch(
             arrayOf(
                 Manifest.permission.CAMERA,
@@ -46,20 +43,26 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        AudioHelper.acquireFocus(context = this)
+        room = ConnectLive.createRoom(events = OnEventListener())
+
         binding.btnAction.setOnClickListener {
             if ((it as MaterialButton).text == "join") {
+                // 로컬 프리뷰카메라 정지및 해제
                 camera?.stop()
                 camera?.dispose()
 
-                room.connect("")
+                // 해당 roomId로 접속
+                room.connect(roomId = "")
                 val localMedia = ConnectLive.createLocalMedia().apply {
                     video?.isEnabled = true
                     audio?.isEnabled = true
                 }
+
+                // 내 localMedia publish
                 room.publish(localMedia)
-
-
             } else {
+                // 연결해제
                 room.disconnect()
             }
         }
@@ -71,14 +74,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onConnected(participants: List<RemoteParticipant>) {
-            // 접속 완료
+            // 해당 Room에 접속 완료
 
+            // 기존에 참여중이던 사람들의 목록을 받습니다.
             // 예제에서는 처음 들어는 비디오만 bind 하여 확인 합니다.
             if (participants.isNotEmpty()) {
                 val remoteVideo = participants.flatMap { it.videos.values }.first()
                 binding.remote.bind(remoteVideo)
             }
 
+            // 버튼의 문구를 바꿔줍니다.
             binding.btnAction.text = "close"
         }
 
@@ -94,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onLocalVideoPublished(video: LocalVideo) {
+            // 나의 video가 publish 되었을때 불리며, 내 video를 local에 렌더링합니다.
             localVideo = video
             binding.local.bind(localVideo)
         }
@@ -104,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onRemoteVideoUnpublished(participant: RemoteParticipant, video: RemoteVideo) {
+            // 다른사람이 퇴장 혹은 video를 unPublish 했을때 unbind 시킨다
             binding.remote.unbind()
         }
     }
