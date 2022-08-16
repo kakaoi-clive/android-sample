@@ -11,6 +11,8 @@
 /captures
 .externalNativeBuild
 .cxx
+*/src/test/
+*/src/androidTest/
 
 
 # Gradle files
