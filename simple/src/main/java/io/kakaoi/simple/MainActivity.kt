@@ -4,16 +4,15 @@ import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.MutableLiveData
-import com.google.android.material.button.MaterialButton
 import io.kakaoi.connectlive.ConnectLive
+import io.kakaoi.connectlive.ErrorHandler
 import io.kakaoi.connectlive.EventsCallback
 import io.kakaoi.connectlive.RemoteParticipant
 import io.kakaoi.connectlive.Room
 import io.kakaoi.connectlive.entity.DisconnectedReason
 import io.kakaoi.connectlive.media.LocalCamera
-import io.kakaoi.connectlive.media.LocalContents
 import io.kakaoi.connectlive.media.LocalVideo
 import io.kakaoi.connectlive.media.RemoteVideo
 import io.kakaoi.connectlive.utils.AudioHelper
@@ -47,13 +46,13 @@ class MainActivity : AppCompatActivity() {
         room = ConnectLive.createRoom(events = OnEventListener())
 
         binding.btnAction.setOnClickListener {
-            if ((it as MaterialButton).text == "join") {
+            if ((it as Button).text == "join") {
                 // 로컬 프리뷰카메라 정지및 해제
                 camera?.stop()
                 camera?.dispose()
 
                 // 해당 roomId로 접속
-                room.connect(roomId = "")
+                room.connect(roomId = "roomId를 넣어주세요.")
                 val localMedia = ConnectLive.createLocalMedia().apply {
                     video?.isEnabled = true
                     audio?.isEnabled = true
