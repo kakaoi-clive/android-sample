@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 camera?.dispose()
 
                 // 해당 roomId로 접속
-                room.connect(roomId = "roomId를 넣어주세요.")
+                room.connect(roomId = ""roomId를 넣어주세요) // roomId는 영문 대소문자, 숫자,- 으로 구성이 가능하며, 길이 제한은 32자입니다.
                 val localMedia = ConnectLive.createLocalMedia().apply {
                     video?.isEnabled = true
                     audio?.isEnabled = true
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onError(code: Int, message: String, isFatal: Boolean) {
             val errorMessage = "code: $code, message: $message, isFatal: $isFatal"
-            Log.d("onError", errorMessage)
+            Log.e("onError", errorMessage)
             if (isFatal)
                 finish()
         }
