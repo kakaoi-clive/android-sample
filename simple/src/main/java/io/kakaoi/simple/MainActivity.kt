@@ -7,7 +7,6 @@ import android.util.Log
 import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import io.kakaoi.connectlive.ConnectLive
-import io.kakaoi.connectlive.ErrorHandler
 import io.kakaoi.connectlive.EventsCallback
 import io.kakaoi.connectlive.RemoteParticipant
 import io.kakaoi.connectlive.Room
@@ -32,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         ConnectLive.init(this)
         ConnectLive.signIn {
             serviceId = "ICLEXMPLPUBL"
-            serviceKey = "ICLEXMPLPUBL0KEY"
-            secret = "YOUR0SRVC0SECRET"
+            serviceSecret = "ICLEXMPLPUBL0KEY:YOUR0SRVC0SECRET"
         }
         requestPermissionForActivateMedia.launch(
             arrayOf(

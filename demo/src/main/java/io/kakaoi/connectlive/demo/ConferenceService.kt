@@ -50,8 +50,7 @@ class ConferenceService : LifecycleService() {
             if (useExternal) {
                 token = prefs.getString(getString(R.string.key_token), null)
             } else {
-                serviceKey = prefs.getString(getString(R.string.key_service_key), null)
-                secret = prefs.getString(getString(R.string.key_secret), null)
+                serviceSecret = "${prefs.getString(getString(R.string.key_service_key), null)}:${prefs.getString(getString(R.string.key_secret), null)}"
             }
 
             endpoint =
@@ -197,7 +196,7 @@ class ConferenceService : LifecycleService() {
         localAudio.value?.isEnabled = enabled
     }
 
-    private fun sendUserMessage(message : String) = room.sendUserMessage(message)
+    private fun sendUserMessage(message : String) = room.sendUserMessage(message = message)
 
     private inner class OnEvents : EventsCallback {
         override fun onConnecting(progress: Float) {
@@ -233,7 +232,7 @@ class ConferenceService : LifecycleService() {
             remoteVideos.value -= video
         }
 
-        override fun onUserMessage(senderId: String, message: String) {
+        override fun onUserMessage(senderId: String, message: String, type: String) {
             Toast.makeText(this@ConferenceService, "(onUserMessage) $senderId : $message", Toast.LENGTH_SHORT).show()
         }
     }
